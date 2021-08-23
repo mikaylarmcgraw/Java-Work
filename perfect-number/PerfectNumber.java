@@ -52,7 +52,7 @@ public class PerfectNumber
                isPerfect(testValue);
            }
         }
-        return result;
+        return result; //breakout
 
     }
 }
