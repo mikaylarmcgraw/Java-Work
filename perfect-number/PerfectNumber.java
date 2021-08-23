@@ -21,6 +21,7 @@ public class PerfectNumber
        {
            System.out.println("Please enter the number you wish to test if it's perfect: ");
            x = scanner.nextInt();
+           isPerfect(x);
            
            //display result back to user.
            if(result == x)
@@ -35,18 +36,18 @@ public class PerfectNumber
 
     }
     
-    public static int isPerfect(int testValue)
+    public static int isPerfect(int testValue)//function to calculate if a number is perfect
     {
         testValue = testValue - 1;
         
         if (testValue != 0)
         {
-           if (x % testValue == 0)
+           if (x % testValue == 0) //if a positive divisor add to the result
            {
                 result = result + testValue;
                 isPerfect(testValue);
            }
-           else
+           else //iterate through other numbers
            {
                isPerfect(testValue);
            }
