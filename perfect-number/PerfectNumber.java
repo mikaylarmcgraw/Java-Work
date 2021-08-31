@@ -9,6 +9,7 @@ public class PerfectNumber
        //initalizing variables
        int n = 0;
        int result = 0; 
+       
        //creating scanner object
        Scanner scanner = new Scanner(System.in);
        
@@ -21,8 +22,11 @@ public class PerfectNumber
        {
            System.out.println("Please enter the number you wish to test if it's perfect: ");
            x = scanner.nextInt();
+           result = isPerfect(x);
            
            //display result back to user.
+           System.out.println("result " + result);
+           System.out.println("x " + x);
            if(result == x)
            {
                System.out.println(x + " eh perfeito!");
@@ -35,23 +39,17 @@ public class PerfectNumber
 
     }
     
-    public static int isPerfect(int testValue)
-    {
-        testValue = testValue - 1;
-        
+    public static int isPerfect(int testValue)//function to calculate if a number is perfect
+    {  
         if (testValue != 0)
         {
-           if (x % testValue == 0)
-           {
-                result = result + testValue;
-                isPerfect(testValue);
-           }
-           else
-           {
-               isPerfect(testValue);
-           }
-        }
-        return result;
+            isPerfect(testValue - 1);
+            if (x % testValue == 0 && x != testValue) //if a positive divisor add to the result
+            {
+               result = result + testValue;
+            }
 
+        }
+            return result;
     }
 }
