@@ -36,12 +36,10 @@ public class AlmostShortestPath extends Node
         }
         
         //assign neighbors
-        for(int i = 0; i < numberOfEdges; i++)
+        while(input != "0 0")
         {
-            int x;
-            int y;
-            int z;
-            assignNeighbors(x, y, z);
+            input = scanner.nextLine();
+            edgeValueBreakUp(input);
         }
     }
     
@@ -61,6 +59,13 @@ public class AlmostShortestPath extends Node
         endNode = Integer.parseInt(stringValue[1]);
     }
     
+    public static void edgeValueBreakUp(String edgeInformation)
+    {
+        String[] edgeData = edgeInformation.split(" ");
+        
+        assignNeighbors(Integer.parseInt(edgeData[0]), Integer.parseInt(edgeData[1]), Integer.parseInt(edgeData[2]));
+    }
+    
     public static void setNodeArrayLength()
     {
         NodeArray = new Node[numberOfNodes];
@@ -75,7 +80,20 @@ public class AlmostShortestPath extends Node
     
     public static void assignNeighbors(int nodeValue, int neighborValue, int distance)
     {
-        
-        
+        for(int i = 0; i < NodeArray.length; i++)
+        {
+            if (NodeArray[i].getNodeValue() == nodeValue) //found node value and assigning neighbors 
+            {
+                Node currentNode = NodeArray[i];
+                currentNode.setNeighbors(neighborValue, distance);
+                i = NodeArray.length;
+            }
+            
+            if(NodeArray[i].getNodeValue() != nodeValue && i == NodeArray.length - 1) // was unable to find node and assign neighbors
+            {
+                System.out.println("Cannot assign neighbor info was invalid: " + nodeValue + " " + neighborValue + " " + distance);
+            }
+            
+        }
     }
 }
