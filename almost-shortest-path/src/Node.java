@@ -1,26 +1,26 @@
 import java.util.*;
 public class Node
 {
-   private static int value;
-   private static Hashtable<Integer, Integer> neighbors = new Hashtable<>();
-   
+   private int value;
+   private Hashtable<Integer, Integer> neighbors = new Hashtable<>();
+    
    public void setNodeValue(int nodeValue)
    {
-       value = nodeValue;
+       this.value = nodeValue;
    }
    
    public int getNodeValue()
    {
-       return value;
+       return this.value;
    }
    
    public void setNeighbors(int value, int distance)
    {
-       neighbors.put(value, distance);
+       this.neighbors.put(value, distance);
    }
    
    public Hashtable getNeighbors()
    {
-       return neighbors;
+       return this.neighbors;
    }
 }
