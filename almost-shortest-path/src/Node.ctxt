@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=Node
+comment1.params=nodeValue
+comment1.target=void\ setNodeValue(int)
+comment2.params=
+comment2.target=int\ getNodeValue()
+comment3.params=value\ distance
+comment3.target=void\ setNeighbors(int,\ int)
+comment4.params=
+comment4.target=java.util.Hashtable\ getNeighbors()
+numComments=5
