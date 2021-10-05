@@ -1,13 +1,17 @@
 #BlueJ class context
 comment0.target=Node
-comment1.params=nodeId
-comment1.target=void\ setNodeId(int)
-comment2.params=distanceValue
-comment2.target=void\ setDistance(int)
-comment3.params=
-comment3.target=int\ getNodeId()
-comment4.params=value\ distance
-comment4.target=void\ setNeighbors(int,\ int)
+comment1.params=value
+comment1.target=void\ setPrevNode(int)
+comment2.params=
+comment2.target=int\ getPrevNode()
+comment3.params=nodeId
+comment3.target=void\ setNodeId(int)
+comment4.params=distanceValue
+comment4.target=void\ setDistance(int)
 comment5.params=
-comment5.target=java.util.Hashtable\ getNeighbors()
-numComments=6
+comment5.target=int\ getNodeId()
+comment6.params=value\ distance
+comment6.target=void\ setNeighbors(int,\ int)
+comment7.params=
+comment7.target=java.util.Hashtable\ getNeighbors()
+numComments=8
