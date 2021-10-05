@@ -6,9 +6,10 @@ public class AlmostShortestPath
     public static String input;
     public static int numberOfNodes;
     public static int numberOfEdges;
-    public static int startNode;
-    public static int endNode;
+    public static int startNodeId;
+    public static int endNodeId;
     public static Node currentNode;
+    public static BinaryHeap MinHeap = new BinaryHeap();
     
     //initalizing scanner TODO remove this to do test inputs.
     static Scanner scanner = new Scanner(System.in);
@@ -18,18 +19,21 @@ public class AlmostShortestPath
         //initalizing nodes and edge value
         input = scanner.nextLine();
         nodeEdgeValueInitalize(input);
-        
         //initalizing start and end node value
         input = scanner.nextLine();
         startNodeEndNodeInitalize(input);
         
+        //Setting up the Min Binary Heap
+        MinHeap.StartHeap(numberOfNodes);
+        
         //building out node array
         setNodeArrayLength();
         
-        //populate array of nodes on the map
+        //populate array of nodes on the heap
         for (int i = 0; i < numberOfNodes; i ++)
         {
             currentNode = createNode(i);
+            MinHeap.Insert(currentNode, currentNode.getNodeId());
             NodeArray[i] = currentNode;
         }
         
@@ -61,8 +65,8 @@ public class AlmostShortestPath
     {
         String[] stringValue = startEndNodeInput.split(" ");
         
-        startNode = Integer.parseInt(stringValue[0]);
-        endNode = Integer.parseInt(stringValue[1]);
+        startNodeId = Integer.parseInt(stringValue[0]);
+        endNodeId = Integer.parseInt(stringValue[1]);
     }
     
     public static void edgeValueBreakUp(String edgeInformation)
@@ -79,14 +83,14 @@ public class AlmostShortestPath
         NodeArray = new Node[numberOfNodes];
     }
     
-    public static Node createNode(int nodeValue)
+    public static Node createNode(int nodeId)
     {
             Node myNewNode = new Node();
-            if (nodeValue == startNode)
+            if (nodeId == startNodeId)
             {
                 myNewNode.setDistance(0);
             }
-            myNewNode.setNodeValue(nodeValue);
+            myNewNode.setNodeId(nodeId);
             return myNewNode;
     }
     
@@ -94,7 +98,7 @@ public class AlmostShortestPath
     {
         for(int i = 0; i < NodeArray.length; i ++)
         {
-            if (NodeArray[i].getNodeValue() == nodeValue)
+            if (NodeArray[i].getNodeId() == nodeValue)
             {
                 currentNode = NodeArray[i];
                 currentNode.setNeighbors(neighborValue, distance);
@@ -103,7 +107,7 @@ public class AlmostShortestPath
             
             if(i == NodeArray.length - 1)
             {
-                if (nodeValue != NodeArray[i].getNodeValue())
+                if (nodeValue != NodeArray[i].getNodeId())
                 {
                    System.out.println("Node could not be found to assign neighbor!");
                 }

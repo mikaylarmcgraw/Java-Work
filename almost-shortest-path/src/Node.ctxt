@@ -1,11 +1,11 @@
 #BlueJ class context
 comment0.target=Node
-comment1.params=nodeValue
-comment1.target=void\ setNodeValue(int)
+comment1.params=nodeId
+comment1.target=void\ setNodeId(int)
 comment2.params=distanceValue
 comment2.target=void\ setDistance(int)
 comment3.params=
-comment3.target=int\ getNodeValue()
+comment3.target=int\ getNodeId()
 comment4.params=value\ distance
 comment4.target=void\ setNeighbors(int,\ int)
 comment5.params=
