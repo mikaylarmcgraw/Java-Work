@@ -3,9 +3,6 @@ public class AlmostShortestPath
 {
     // initalizing variables
     public static Node[] NodeArray;
-    private int[] Heap;
-    private int currentSize;
-    private int maxHeapSize;
     public static String input;
     public static int numberOfNodes;
     public static int numberOfEdges;
@@ -85,6 +82,10 @@ public class AlmostShortestPath
     public static Node createNode(int nodeValue)
     {
             Node myNewNode = new Node();
+            if (nodeValue == startNode)
+            {
+                myNewNode.setDistance(0);
+            }
             myNewNode.setNodeValue(nodeValue);
             return myNewNode;
     }
@@ -107,6 +108,22 @@ public class AlmostShortestPath
                    System.out.println("Node could not be found to assign neighbor!");
                 }
             }
+        }
+    }
+    
+    public void dijkstra()
+    {
+        //current node will start as the startnode 
+        // while endNode.visited == false && || invisited distance is infitity 
+        // 3.) for each neighbor of currentNode:
+                // up dateneighborNode.Distance = currentNode.Distance + currentNode.neighbors[neighborNode.distance]
+        //mark current node as visited with setting flag to true
+        //stick node we have just visited in a seperate list we will not be coming back to it
+
+        //look at unvisited neighbors and go back to step 3
+        {
+            
+            
         }
     }
 }

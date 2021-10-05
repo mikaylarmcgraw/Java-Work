@@ -1,12 +1,17 @@
 import java.util.*;
 public class Node
 {
-   private int value;
+   private int value; //node id here instead
    private Hashtable<Integer, Integer> neighbors = new Hashtable<>();
-    
+   private boolean visited = false;
+   private int distance = Integer.MAX_VALUE;
    public void setNodeValue(int nodeValue)
    {
        this.value = nodeValue;
+   }
+   public void setDistance(int distanceValue)
+   {
+       this.distance = distanceValue;
    }
    
    public int getNodeValue()
