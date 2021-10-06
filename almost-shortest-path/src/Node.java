@@ -2,8 +2,7 @@ import java.util.*;
 public class Node
 {
    private int Id; //unique identifier for nodes
-   private Hashtable<Integer, Integer> neighbors = new Hashtable<>();
-   private boolean visited = false;
+   private ArrayList<Edge> neighborEdges = new ArrayList<Edge>();
    private int distance = Integer.MAX_VALUE;
    private Node prevNode = null;
    
@@ -37,13 +36,13 @@ public class Node
        return this.Id;
    }
    
-   public void setNeighbors(int value, int distance)
+   public void setNeighbors(Edge newNeighbor)
    {
-       this.neighbors.put(value, distance);
+       this.neighborEdges.add(newNeighbor);
    }
    
-   public Hashtable getNeighbors()
+   public ArrayList getNeighbors()
    {
-       return this.neighbors;
+       return this.neighborEdges;
    }
 }

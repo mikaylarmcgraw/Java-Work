@@ -112,11 +112,23 @@ public class BinaryHeap
     }
     
     //identifies the minimum element in the heap, which is located at index 1, but does not remove it. This takes O(1) time.
-    public int FindMin()
+    public Node FindMin()
     {
-        return 1;
+        return this.MinHeap[1];
     }
     
+    public Node FindNode(int nodeId)
+    {
+        Node foundNode = null;
+        for (int i = 1; i < MinHeap.length; i++)
+        {
+           if (MinHeap[i].getNodeId() == nodeId)
+           {
+               foundNode = MinHeap[i];
+           }
+        }
+        return foundNode;
+    }
     //Delete(index) – deletes the element in the specified heap position by moving the item in the last array position to index, 
     //then using Heapify_Down to reposition that item. This is implemented in O(log n) time for heaps that have n elements.
     public void Delete(int index)
@@ -134,8 +146,8 @@ public class BinaryHeap
     //This is a combination of the preceding two operations, and so it takes O(log n) time.
     public void ExtractMin()
     {
-       int minIndex = FindMin();
-       Delete(minIndex);
+       Node minNode = FindMin();
+       Delete(dictionary.indexOf(minNode));
     }
     
     //which changes the key value of element v to newValue. To implement this operation in O(logn) time, 

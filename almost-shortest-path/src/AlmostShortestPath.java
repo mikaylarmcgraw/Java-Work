@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.*;
 public class AlmostShortestPath
 {
     // initalizing variables
@@ -8,8 +9,12 @@ public class AlmostShortestPath
     public static int numberOfEdges;
     public static int startNodeId;
     public static int endNodeId;
+    public static Node endNode;
+    public static Node startNode;
     public static Node currentNode;
     public static BinaryHeap MinHeap = new BinaryHeap();
+    public static List<Node> Visited = new ArrayList<Node>();
+    public static List <Node> UnVisited = new ArrayList<Node>(); 
     
     //initalizing scanner TODO remove this to do test inputs.
     static Scanner scanner = new Scanner(System.in);
@@ -50,6 +55,8 @@ public class AlmostShortestPath
             
             MinHeap.ChangeKey(NodeArray[i], 4+i);
         }
+        
+        dijkstra(MinHeap.FindMin());
     }
     
     public static void nodeEdgeValueInitalize(String nodeEdgeInput)
@@ -85,48 +92,64 @@ public class AlmostShortestPath
     public static Node createNode(int nodeId)
     {
             Node myNewNode = new Node();
+            if (nodeId == endNodeId)
+            {
+                endNode = myNewNode;
+            }
             if (nodeId == startNodeId)
             {
                 myNewNode.setDistance(0);
+                startNode = myNewNode;
             }
             myNewNode.setNodeId(nodeId);
             return myNewNode;
     }
     
-    public static void assignNeighbors(int nodeValue, int neighborValue, int distance)
+    public static void assignNeighbors(int srcId, int endId, int distance)
     {
-        for(int i = 0; i < NodeArray.length; i ++)
-        {
-            if (NodeArray[i].getNodeId() == nodeValue)
-            {
-                currentNode = NodeArray[i];
-                currentNode.setNeighbors(neighborValue, distance);
-                i = NodeArray.length;
-            }
-            
-            if(i == NodeArray.length - 1)
-            {
-                if (nodeValue != NodeArray[i].getNodeId())
-                {
-                   System.out.println("Node could not be found to assign neighbor!");
-                }
-            }
-        }
+        Node currentNode = MinHeap.FindNode(srcId);
+        Edge newEdge = new Edge();
+        newEdge.setSrcNode(srcId);
+        newEdge.setEndNode(endId);
+        newEdge.setLength(distance);
+        currentNode.setNeighbors(newEdge);
     }
     
-    public void dijkstra()
+    public static void dijkstra(Node currentNode)
     {
-        //current node will start as the startnode 
-        // while endNode.visited == false && || invisited distance is infitity 
-        // 3.) for each neighbor of currentNode:
-                // up dateneighborNode.Distance = currentNode.Distance + currentNode.neighbors[neighborNode.distance]
-        //mark current node as visited with setting flag to true
-        //stick node we have just visited in a seperate list we will not be coming back to it
+        boolean stillNodesToVisit = false;
+        
+        if (UnVisited.isEmpty() == false) // if there's nodes in unvisited check distance
+        {
+            for (Node n : UnVisited)
+            {
+                if (n.getDistance() !=  Integer.MAX_VALUE)
+                stillNodesToVisit = true;
+                break;
+            }
+        }
+
+        while (!Visited.contains(endNode)|| stillNodesToVisit) // while endNode.visited == false && || invisited distance is infitity
+        {
+            ArrayList<Edge> edgeListCopy = currentNode.getNeighbors();
+            
+            for (int i = 0; i < edgeListCopy.size(); i++)
+            {
+                int neighborId = edgeListCopy.get(i).getEndNode();
+                int edgeValue = edgeListCopy.get(i).getLength();
+                Node currentNeighbor = MinHeap.FindNode(neighborId);
+                
+                if (currentNeighbor.getDistance() > (currentNode.getDistance() + edgeValue))
+                {
+                    currentNeighbor.setDistance((currentNode.getDistance() + edgeValue)); //update new priority value if previous is greater
+                }
+                Visited.add(currentNode); //stick node we have just visited in a seperate list we will not be coming back to it
+            }
+        }
+
+        
 
         //look at unvisited neighbors and go back to step 3
-        {
-            
-            
-        }
+
     }
 }
