@@ -1,10 +1,12 @@
 import java.util.Scanner;
 import java.util.*;
+import java.io.File;  // Import the File class
+import java.io.FileNotFoundException;  // Import this class to handle errors
 public class AlmostShortestPath
 {
     // initalizing variables
     public static Node[] NodeArray;
-    public static String input;
+    public static String data;
     public static int numberOfNodes;
     public static int numberOfEdges;
     public static int startNodeId;
@@ -21,13 +23,31 @@ public class AlmostShortestPath
     
     public static void main(String[] arg)
     {
-        //initalizing nodes and edge value
-        input = scanner.nextLine();
-        nodeEdgeValueInitalize(input);
-        //initalizing start and end node value
-        input = scanner.nextLine();
-        startNodeEndNodeInitalize(input);
-        
+       try 
+       {
+          File myObj = new File("inputValues.txt");
+          Scanner myReader = new Scanner(myObj);
+          data = myReader.nextLine();
+          nodeEdgeValueInitalize(data);
+          data = myReader.nextLine();
+          startNodeEndNodeInitalize(data);
+          while (myReader.hasNextLine()) 
+          {
+            data = myReader.nextLine();
+            if (!data.equals("0 0"))
+            {
+                data = scanner.nextLine();
+                edgeValueBreakUp(data);
+            }
+          }
+          myReader.close();
+        } 
+        catch (FileNotFoundException e) 
+        {
+          System.out.println("An error occurred.");
+          e.printStackTrace();
+        }
+
         //Setting up the Min Binary Heap to hold number of nodes starting at index 1
         MinHeap.StartHeap(numberOfNodes + 1);
         
@@ -40,13 +60,6 @@ public class AlmostShortestPath
             currentNode = createNode(i);
             MinHeap.Insert(currentNode, MinHeap.getNearestOpening());
             NodeArray[i] = currentNode;
-        }
-        
-        //assign neighbors
-        for (int i = 1; i <= numberOfEdges; i++)
-        {
-            input = scanner.nextLine();
-            edgeValueBreakUp(input);
         }
 
         //print neighbors make sure they are assigned right
@@ -115,7 +128,7 @@ public class AlmostShortestPath
         currentNode.setNeighbors(newEdge);
     }
     
-    public static void dijkstra(Node currentNode)
+    public static int dijkstra(Node currentNode)
     {
         boolean stillNodesToVisit = false;
         
@@ -141,15 +154,26 @@ public class AlmostShortestPath
                 
                 if (currentNeighbor.getDistance() > (currentNode.getDistance() + edgeValue))
                 {
-                    currentNeighbor.setDistance((currentNode.getDistance() + edgeValue)); //update new priority value if previous is greater
+                    MinHeap.ChangeKey(currentNeighbor, currentNode.getDistance() + edgeValue); //update new priority value if previous is greater
+                    currentNeighbor.setPrevNode(currentNode); //set previous node to current node so we know what edge we kept
                 }
-                Visited.add(currentNode); //stick node we have just visited in a seperate list we will not be coming back to it
             }
+            Visited.add(currentNode); //stick node we have just visited in a seperate list we will not be coming back to it
+            if (edgeListCopy.size() > 1) // sort through list to order neighbors from distance from startNode
+            {
+              currentNode.sortNeighbors(edgeListCopy);
+            }
+            
+            int newCurrentNodeId = edgeListCopy.get(0).getEndNode();
+            currentNode = MinHeap.FindNode(newCurrentNodeId);
         }
 
-        
+        if (!Visited.contains(endNode))
+        {
+            return -1;
+        }
 
         //look at unvisited neighbors and go back to step 3
-
+        return 0;
     }
 }

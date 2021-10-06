@@ -41,6 +41,32 @@ public class Node
        this.neighborEdges.add(newNeighbor);
    }
    
+    public void sortNeighbors(ArrayList<Edge> edgeList) 
+    {
+        Edge edge1 = null;
+        Edge edge2 = null;
+        Edge ascendingEdge = null;
+        int index;
+        for (int i = 0; i < edgeList.size() - 1; i++)
+        {
+            edge1 = edgeList.get(i);
+            
+            for (int j = i + 1; j < edgeList.size(); j++)
+            {
+                 edge2 = edgeList.get(j);   
+                 if (edgeList.get(i).getLength() > edgeList.get(j).getLength()) //switching positions
+                 {
+                      index = j;
+                      ascendingEdge = edgeList.get(index);
+                      edgeList.set(index, edgeList.get(i));
+                      edgeList.set(i, ascendingEdge);
+                 }
+
+            }
+        }
+        this.neighborEdges = edgeList; // save sorted list
+    }
+   
    public ArrayList getNeighbors()
    {
        return this.neighborEdges;
