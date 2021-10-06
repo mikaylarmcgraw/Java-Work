@@ -23,8 +23,8 @@ public class AlmostShortestPath
         input = scanner.nextLine();
         startNodeEndNodeInitalize(input);
         
-        //Setting up the Min Binary Heap
-        MinHeap.StartHeap(numberOfNodes);
+        //Setting up the Min Binary Heap to hold number of nodes starting at index 1
+        MinHeap.StartHeap(numberOfNodes + 1);
         
         //building out node array
         setNodeArrayLength();
@@ -33,7 +33,7 @@ public class AlmostShortestPath
         for (int i = 0; i < numberOfNodes; i ++)
         {
             currentNode = createNode(i);
-            MinHeap.Insert(currentNode, currentNode.getNodeId());
+            MinHeap.Insert(currentNode, MinHeap.getNearestOpening());
             NodeArray[i] = currentNode;
         }
         
@@ -45,11 +45,10 @@ public class AlmostShortestPath
         }
 
         //print neighbors make sure they are assigned right
-        for (int i = 0; i < NodeArray.length; i++)
+        for (int i = 2; i < NodeArray.length; i++)
         {
             
-            System.out.println("Node " + i + "Neighbors: ");
-            System.out.println(NodeArray[i].getNeighbors());
+            MinHeap.ChangeKey(NodeArray[i], 4+i);
         }
     }
     

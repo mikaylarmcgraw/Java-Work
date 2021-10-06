@@ -5,14 +5,14 @@ public class Node
    private Hashtable<Integer, Integer> neighbors = new Hashtable<>();
    private boolean visited = false;
    private int distance = Integer.MAX_VALUE;
-   private int prevNode = Integer.MAX_VALUE;
+   private Node prevNode = null;
    
-   public void setPrevNode(int value)
+   public void setPrevNode(Node prevNodeCopy)
    {
-       this.prevNode = value;
+       this.prevNode = prevNodeCopy;
    }
    
-   public int getPrevNode()
+   public Node getPrevNode()
    {
        return this.prevNode;
    }
@@ -21,9 +21,15 @@ public class Node
    {
        this.Id = nodeId;
    }
+   
    public void setDistance(int distanceValue)
    {
        this.distance = distanceValue;
+   }
+   
+   public int getDistance()
+   {
+       return this.distance;
    }
    
    public int getNodeId()
