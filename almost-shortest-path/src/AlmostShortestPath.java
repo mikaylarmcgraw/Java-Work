@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;  // Import this class to handle errors
 public class AlmostShortestPath
 {
     // initalizing variables
-    public static Node[] NodeArray;
     public static String data;
     public static int numberOfNodes;
     public static int numberOfEdges;
@@ -13,7 +12,6 @@ public class AlmostShortestPath
     public static int endNodeId;
     public static Node endNode;
     public static Node startNode;
-    public static Node currentNode;
     public static BinaryHeap MinHeap = new BinaryHeap();
     public static List<Node> Visited = new ArrayList<Node>();
     public static List <Node> UnVisited = new ArrayList<Node>(); 
@@ -31,14 +29,19 @@ public class AlmostShortestPath
           nodeEdgeValueInitalize(data);
           data = myReader.nextLine();
           startNodeEndNodeInitalize(data);
+          //Setting up the Min Binary Heap to hold number of nodes starting at index 1
+          MinHeap.StartHeap(numberOfNodes + 1);
+          //populate heap with nodes
+          for (int i = 0; i < numberOfNodes; i ++)
+          {
+                Node newCreatedNode = createNode(i);
+                MinHeap.Insert(newCreatedNode, MinHeap.getNearestOpening());
+          }
+          
           while (myReader.hasNextLine()) 
           {
-            data = myReader.nextLine();
-            if (!data.equals("0 0"))
-            {
-                data = scanner.nextLine();
+                data = myReader.nextLine();
                 edgeValueBreakUp(data);
-            }
           }
           myReader.close();
         } 
@@ -48,27 +51,6 @@ public class AlmostShortestPath
           e.printStackTrace();
         }
 
-        //Setting up the Min Binary Heap to hold number of nodes starting at index 1
-        MinHeap.StartHeap(numberOfNodes + 1);
-        
-        //building out node array
-        setNodeArrayLength();
-        
-        //populate array of nodes on the heap
-        for (int i = 0; i < numberOfNodes; i ++)
-        {
-            currentNode = createNode(i);
-            MinHeap.Insert(currentNode, MinHeap.getNearestOpening());
-            NodeArray[i] = currentNode;
-        }
-
-        //print neighbors make sure they are assigned right
-        for (int i = 2; i < NodeArray.length; i++)
-        {
-            
-            MinHeap.ChangeKey(NodeArray[i], 4+i);
-        }
-        
         dijkstra(MinHeap.FindMin());
     }
     
@@ -91,16 +73,9 @@ public class AlmostShortestPath
     public static void edgeValueBreakUp(String edgeInformation)
     {
         String[] edgeData = edgeInformation.split(" ");
-        System.out.println(edgeData[0]);
-        System.out.println(edgeData[1]);
-        System.out.println(edgeData[2]);
         assignNeighbors(Integer.parseInt(edgeData[0]), Integer.parseInt(edgeData[1]), Integer.parseInt(edgeData[2]));
     }
     
-    public static void setNodeArrayLength()
-    {
-        NodeArray = new Node[numberOfNodes];
-    }
     
     public static Node createNode(int nodeId)
     {

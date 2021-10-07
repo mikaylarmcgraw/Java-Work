@@ -71,7 +71,7 @@ public class BinaryHeap
     
     public void StartHeap(int n) // initializes an empty heap to store at most N  + 1 elements since we are starting at index 1
     {
-        this.MinHeap = new Node[n+1];
+        this.MinHeap = new Node[n];
         setLength(n);
     }
     
@@ -102,8 +102,7 @@ public class BinaryHeap
         if (item.getDistance() == 0)
         {
             this.MinHeap[1] = item;
-            this.dictionary.add(1, item);
-            this.nearestOpenIndex++;
+            this.dictionary.add(item);
         }
         //else insert at nearest opening on heap and heapify up
         this.MinHeap[value] = item;
@@ -119,15 +118,15 @@ public class BinaryHeap
     
     public Node FindNode(int nodeId)
     {
-        Node foundNode = null;
         for (int i = 1; i < MinHeap.length; i++)
         {
            if (MinHeap[i].getNodeId() == nodeId)
            {
-               foundNode = MinHeap[i];
+              Node foundNode = MinHeap[i];
+               return foundNode;
            }
         }
-        return foundNode;
+        return null;
     }
     //Delete(index) – deletes the element in the specified heap position by moving the item in the last array position to index, 
     //then using Heapify_Down to reposition that item. This is implemented in O(log n) time for heaps that have n elements.

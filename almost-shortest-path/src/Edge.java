@@ -26,7 +26,7 @@ public class Edge
     
         public void setEndNode(int nodeId)
     {
-        this.srcNodeId = nodeId;
+        this.endNodeId = nodeId;
     }
     
     public int getEndNode()
