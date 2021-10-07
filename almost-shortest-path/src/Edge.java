@@ -21,7 +21,7 @@ public class Edge
     
     public int getLength()
     {
-        return this.srcNodeId;
+        return this.length;
     }
     
         public void setEndNode(int nodeId)
