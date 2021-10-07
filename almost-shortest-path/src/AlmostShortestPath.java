@@ -15,6 +15,7 @@ public class AlmostShortestPath
     public static BinaryHeap MinHeap = new BinaryHeap();
     public static List<Node> Visited = new ArrayList<Node>();
     public static List <Node> UnVisited = new ArrayList<Node>(); 
+    private static ArrayList<Node> dictionary = new ArrayList<Node>();
     
     //initalizing scanner TODO remove this to do test inputs.
     static Scanner scanner = new Scanner(System.in);
@@ -50,7 +51,8 @@ public class AlmostShortestPath
           System.out.println("An error occurred.");
           e.printStackTrace();
         }
-
+        //initalize dictionary with values
+        dictionary = MinHeap.initalizeDictionary(dictionary);
         dijkstra(MinHeap.FindMin());
     }
     
@@ -134,13 +136,15 @@ public class AlmostShortestPath
                 }
             }
             Visited.add(currentNode); //stick node we have just visited in a seperate list we will not be coming back to it
-            if (edgeListCopy.size() > 1) // sort through list to order neighbors from distance from startNode
+            MinHeap.initalizeDictionary(dictionary); // keep dictionary up to date
+            if (currentNode != endNode) // sort through list to order neighbors from distance from startNode
             {
               currentNode.sortNeighbors(edgeListCopy);
+              int newCurrentNodeId = edgeListCopy.get(0).getEndNode();
+              currentNode = MinHeap.FindNode(newCurrentNodeId); // extract from dictionary
             }
             
-            int newCurrentNodeId = edgeListCopy.get(0).getEndNode();
-            currentNode = MinHeap.FindNode(newCurrentNodeId);
+
         }
 
         if (!Visited.contains(endNode))
@@ -149,6 +153,7 @@ public class AlmostShortestPath
         }
 
         //look at unvisited neighbors and go back to step 3
+        System.out.println("Finished Dijkstra! shortest distance found!");
         return 0;
     }
 }

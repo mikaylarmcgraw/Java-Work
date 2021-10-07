@@ -3,7 +3,6 @@ public class BinaryHeap
 {
     private Node[] MinHeap;
     private int length;
-    private ArrayList<Node> dictionary = new ArrayList<Node>();
     private int nearestOpenIndex = 1;
     
     // moves an element located at the specified index upwards in the heap to correctly reposition an element 
@@ -23,6 +22,15 @@ public class BinaryHeap
 		Heapify_Up(parentIndex); //make sure you are large than your parent
             }
 	}
+    }
+    
+    public ArrayList<Node> initalizeDictionary(ArrayList <Node> dictionary)
+    {
+        for (int i = 0; i < getLength(); i++)
+        {
+            dictionary.add(MinHeap[i]);
+        }
+        return dictionary;
     }
     
     public int parent(int i)
@@ -59,10 +67,6 @@ public class BinaryHeap
         if (this.MinHeap[smallest].getDistance() < this.MinHeap[i].getDistance()) // compare if child is smaller than parent
         {
                 Node tempNode = MinHeap[smallest]; // if they are swap the values and update dictionary
-                dictionary.remove(MinHeap[i]);
-                dictionary.add(i, tempNode);
-                dictionary.remove(MinHeap[smallest]);
-                dictionary.add(smallest, MinHeap[i]);
                 MinHeap[smallest] = MinHeap[i];
                 MinHeap[i] = tempNode;
                 Heapify_Down(smallest);
@@ -102,7 +106,6 @@ public class BinaryHeap
         if (item.getDistance() == 0)
         {
             this.MinHeap[1] = item;
-            this.dictionary.add(item);
         }
         //else insert at nearest opening on heap and heapify up
         this.MinHeap[value] = item;
@@ -134,9 +137,7 @@ public class BinaryHeap
     {
         Node removedNode = MinHeap[index]; // saving remove node data
         MinHeap[index] = null; //clearing space
-        dictionary.remove(removedNode); //removing from heap dictionary
         MinHeap[index] = MinHeap[getNearestOpening() - 1];
-        dictionary.add(index, MinHeap[getNearestOpening()-1]); // replace with the node to fill the spot
         this.nearestOpenIndex--; //decrement nearest opening
         Heapify_Down(index); //position node you replaced in the opening to the correct spot of heap
     }
@@ -146,7 +147,7 @@ public class BinaryHeap
     public void ExtractMin()
     {
        Node minNode = FindMin();
-       Delete(dictionary.indexOf(minNode));
+       Delete(1);
     }
     
     //which changes the key value of element v to newValue. To implement this operation in O(logn) time, 
@@ -154,17 +155,25 @@ public class BinaryHeap
     //Once we have identified the position of element v, we change the key and then apply Heapify-up or Heapify-down as appropriate.
     public void ChangeKey(Node item, int newDistance)
     {
-        int i = dictionary.indexOf(item);
-        Node currentNode = this.MinHeap[i];
+        int index = 0;
+        for (int i = 0; i < MinHeap.length; i++) // may not need this we need this to set current Node when we have item?
+        {
+            if (MinHeap[i] == item)
+            {
+                index = i;
+                break;
+            }
+        }
+        Node currentNode = this.MinHeap[index];
         int oldValue = currentNode.getDistance();
         currentNode.setDistance(newDistance);
         if (newDistance < oldValue)
         {
-           Heapify_Up(i);
+           Heapify_Up(index);
         }
         else
         {
-           Heapify_Down(i);
+           Heapify_Down(index);
         }
     }
 }
