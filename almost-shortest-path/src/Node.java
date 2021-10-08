@@ -40,7 +40,10 @@ public class Node
    {
        this.neighborEdges.add(newNeighbor);
    }
-   
+   public void removeNeighbor(Edge removeNeighbor)
+   {
+       this.neighborEdges.remove(removeNeighbor);
+    }
     public void sortNeighbors(ArrayList<Edge> edgeList) 
     {
         Edge edge1 = null;

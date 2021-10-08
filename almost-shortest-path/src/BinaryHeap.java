@@ -26,6 +26,7 @@ public class BinaryHeap
     
     public ArrayList<Node> initalizeDictionary(ArrayList <Node> dictionary)
     {
+        dictionary.clear();
         for (int i = 0; i < getLength(); i++)
         {
             dictionary.add(MinHeap[i]);
@@ -156,17 +157,16 @@ public class BinaryHeap
     public void ChangeKey(Node item, int newDistance)
     {
         int index = 0;
-        for (int i = 0; i < MinHeap.length; i++) // may not need this we need this to set current Node when we have item?
+        for (int i = 1; i < MinHeap.length; i++) // may not need this we need this to set current Node when we have item?
         {
-            if (MinHeap[i] == item)
+            if (MinHeap[i].getNodeId() == item.getNodeId()) //compare ID they won't be equal at this point.
             {
                 index = i;
                 break;
             }
         }
-        Node currentNode = this.MinHeap[index];
-        int oldValue = currentNode.getDistance();
-        currentNode.setDistance(newDistance);
+        int oldValue = item.getDistance();
+        item.setDistance(newDistance);
         if (newDistance < oldValue)
         {
            Heapify_Up(index);
