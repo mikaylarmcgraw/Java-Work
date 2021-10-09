@@ -86,30 +86,30 @@ class Node
    {
        this.neighborEdges.remove(removeNeighbor);
     }
-    public void sortNeighbors(ArrayList<Edge> edgeList) 
+    public List sortUnVisitedVerticies(List<Node> UnVisitedNodes) 
     {
-        Edge edge1 = null;
-        Edge edge2 = null;
-        Edge ascendingEdge = null;
+        Node edge1 = null;
+        Node edge2 = null;
+        Node ascendingEdge = null;
         int index;
-        for (int i = 0; i < edgeList.size() - 1; i++)
+        for (int i = 0; i < UnVisitedNodes.size() - 1; i++)
         {
-            edge1 = edgeList.get(i);
+            edge1 = UnVisitedNodes.get(i);
             
-            for (int j = i + 1; j < edgeList.size(); j++)
+            for (int j = i + 1; j < UnVisitedNodes.size(); j++)
             {
-                 edge2 = edgeList.get(j);   
-                 if (edgeList.get(i).getLength() > edgeList.get(j).getLength()) //switching positions
+                 edge2 = UnVisitedNodes.get(j);   
+                 if (UnVisitedNodes.get(i).getDistance() > UnVisitedNodes.get(j).getDistance()) //switching positions
                  {
                       index = j;
-                      ascendingEdge = edgeList.get(index);
-                      edgeList.set(index, edgeList.get(i));
-                      edgeList.set(i, ascendingEdge);
+                      ascendingEdge = UnVisitedNodes.get(index);
+                      UnVisitedNodes.set(index, UnVisitedNodes.get(i));
+                      UnVisitedNodes.set(i, ascendingEdge);
                  }
 
             }
         }
-        this.neighborEdges = edgeList; // save sorted list
+        return UnVisitedNodes; // save sorted list
     }
    
    public ArrayList getNeighbors()
@@ -131,16 +131,16 @@ class BinaryHeap
     {
         //Check if im the root, if I am there's no one above me
         if(index > 1)
-	{
-	    int parentIndex = parent(index); // im not the root so find my parent
-	    if (this.MinHeap[index].getDistance() < MinHeap[parentIndex].getDistance()) // compare to see if the node is less than parent
-	    {
-		Node ParentCopy = MinHeap[parentIndex]; //if it is you need to swap the two values
-		MinHeap[parentIndex] = MinHeap[index];
-		MinHeap[index] = ParentCopy;
-		Heapify_Up(parentIndex); //make sure you are large than your parent
+    {
+        int parentIndex = parent(index); // im not the root so find my parent
+        if (this.MinHeap[index].getDistance() < MinHeap[parentIndex].getDistance()) // compare to see if the node is less than parent
+        {
+        Node ParentCopy = MinHeap[parentIndex]; //if it is you need to swap the two values
+        MinHeap[parentIndex] = MinHeap[index];
+        MinHeap[index] = ParentCopy;
+        Heapify_Up(parentIndex); //make sure you are large than your parent
             }
-	}
+    }
     }
     
     public ArrayList<Node> initalizeDictionary(ArrayList <Node> dictionary)
@@ -173,7 +173,7 @@ class BinaryHeap
             int leftChild = 2 * i;
             
             smallest = leftChild; //set smallest to left child first
-            if ((2* i) + 1 <= length) //check if index has right child
+            if ((2* i) + 1 < length) //check if index has right child
             {
                 int rightChild = (2*i) + 1; //assign right child
                 if (this.MinHeap[rightChild].getDistance() < this.MinHeap[leftChild].getDistance()) // find smallest value between children
@@ -309,10 +309,11 @@ public class Main
     public static int almostShortestDistance;
     public static Node endNode;
     public static Node startNode;
-    public static BinaryHeap MinHeap = new BinaryHeap();
+    public static BinaryHeap MinHeap;
     public static List<Node> Visited = new ArrayList<Node>();
-    public static List <Node> UnVisited = new ArrayList<Node>(); 
+    public static List <Edge> edgesSettled = new ArrayList<Edge>(); 
     private static ArrayList<Node> dictionary = new ArrayList<Node>();
+    public static List<Node> UnVisited = new ArrayList<Node>();
     
     //initalizing scanner TODO remove this to do test inputs.
     static Scanner scanner = new Scanner(System.in);
@@ -321,26 +322,80 @@ public class Main
     {
        try 
        {
-          File myObj = new File("inputValues.txt");
+          int testCases= 1;
+           File myObj = new File("inputValues.txt");
           Scanner myReader = new Scanner(myObj);
           data = myReader.nextLine();
           String[] stringValue = data.split(" ");
-          nodeEdgeValueInitalize(data);
-          data = myReader.nextLine();
-          startNodeEndNodeInitalize(data);
-          //Setting up the Min Binary Heap to hold number of nodes starting at index 1
-          MinHeap.StartHeap(numberOfNodes + 1);
-          //populate heap with nodes
-          for (int i = 0; i < numberOfNodes; i ++)
+          while (!data.equals("0 0"))
           {
-                Node newCreatedNode = createNode(i);
-                MinHeap.Insert(newCreatedNode, MinHeap.getNearestOpening());
-          }
-          
-          while (myReader.hasNextLine()) 
-          {
-                data = myReader.nextLine();
-                edgeValueBreakUp(data);
+              System.out.println("Test case : " + testCases);
+              String[] stringValues = data.split(" ");
+              nodeEdgeValueInitalize(stringValues); //send array to assign number of nodes & edges
+              MinHeap = new BinaryHeap();
+              //Setting up the Min Binary Heap to hold number of nodes starting at index 1
+              MinHeap.StartHeap(numberOfNodes + 1);
+              
+              data = myReader.nextLine();
+              startNodeEndNodeInitalize(data); //send start and end node data
+              //populate heap with nodes
+              for (int i = 0; i < numberOfNodes; i ++)
+              {
+                    Node newCreatedNode = createNode(i);
+                    MinHeap.Insert(newCreatedNode, MinHeap.getNearestOpening());
+              }
+
+              boolean flag = true; //this helps control second while
+              
+              while(flag)
+              {
+                  data = myReader.nextLine();
+                  String[] edgeInfo = data.split(" ");
+                  if(edgeInfo.length == 3)
+                  {
+                      edgeValueBreakUp(edgeInfo);
+                  }
+                  else
+                  {
+                      flag = false;
+                  }
+              }
+               //initalize dictionary with values
+               dictionary = MinHeap.initalizeDictionary(dictionary);
+               actualShortestDistance = dijkstra(MinHeap.FindMin());
+               almostShortestDistance = actualShortestDistance;
+               dictionary = MinHeap.initalizeDictionary(dictionary);
+               for (int j = 2; j < dictionary.size(); j++)
+               {
+                       setDistancesToInfinity(dictionary.get(j)); //set all distances besides startNode back to infinity
+               }
+               if(actualShortestDistance != -1) //there is atleast one path from start to end find the almost
+               {
+                    while (almostShortestDistance == actualShortestDistance && numberOfEdges > 0)
+                    {
+                        Visited.clear();
+                        almostShortestDistance = dijkstra(MinHeap.FindMin());
+                        dictionary = MinHeap.initalizeDictionary(dictionary);
+                        for (int j = 2; j < dictionary.size(); j++)
+                        {
+                           setDistancesToInfinity(dictionary.get(j)); //set all distances besides startNode back to infinity
+                        }
+                    }
+                    Visited.clear();
+                    if(almostShortestDistance == actualShortestDistance)
+                    {
+                        almostShortestDistance = -1;
+                    }
+
+                    System.out.println("Almost shortest distance: " + almostShortestDistance);
+                    
+                }
+                else // there was never a path from start to end actual = -1
+                {
+                    System.out.println(actualShortestDistance);
+                }
+
+                testCases++;
           }
           myReader.close();
         } 
@@ -349,20 +404,7 @@ public class Main
           //System.out.println("An error occurred.");
           e.printStackTrace();
         }
-        //initalize dictionary with values
-        dictionary = MinHeap.initalizeDictionary(dictionary);
-        for (int i = 0; i <= 2; i++)
-        {
-            initalizeUnVisitedList();
-            Visited.clear();
-            dijkstra(MinHeap.FindMin());
-            dictionary = MinHeap.initalizeDictionary(dictionary);
-            for (int j = 2; j < dictionary.size(); j++)
-            {
-               setDistancesToInfinity(dictionary.get(j)); //set all distances besides startNode back to infinity
-            }
-        }
-
+      
     }
     
     public static void setDistancesToInfinity(Node nodeItem)
@@ -370,20 +412,11 @@ public class Main
             MinHeap.ChangeKey(nodeItem, Integer.MAX_VALUE);
     }
     
-    public static void initalizeUnVisitedList()
-    {
-        for (int i = 0; i < dictionary.size(); i ++)
-        {
-            UnVisited.add(dictionary.get(i));
-        }
-    }
     
     public static int calculateEdges(Node endNode)
     {
         Node currentNode = endNode;
-        int distanceFromStart = currentNode.getDistance(); //get total distance from start (this is the shortest path)
-        System.out.println(distanceFromStart);
-        //System.out.println("");
+        int distance = currentNode.getDistance(); //get total distance from start (this is the shortest path)
         while (currentNode != startNode)
         {
             Node previousNode = currentNode.getPrevNode();
@@ -396,6 +429,7 @@ public class Main
                     Edge edgeFound = copyOfEdges.get(i);
                     //System.out.println(edgeFound.getSrcNode() + " -> " + edgeFound.getEndNode()); //TODO git rid debugging
                     previousNode.removeNeighbor(edgeFound); // now remove these edges of the shortest path
+                    numberOfEdges--;
                     break;
                 }
             }
@@ -405,12 +439,10 @@ public class Main
         return 0;
     }
     
-    public static void nodeEdgeValueInitalize(String nodeEdgeInput)
+    public static void nodeEdgeValueInitalize(String [] array)
     {
-        String[] stringValue = nodeEdgeInput.split(" ");
-        
-        numberOfNodes = Integer.parseInt(stringValue[0]);
-        numberOfEdges = Integer.parseInt(stringValue[1]);
+        numberOfNodes = Integer.parseInt(array[0]);
+        numberOfEdges = Integer.parseInt(array[1]);
     }
     
     public static void startNodeEndNodeInitalize(String startEndNodeInput)
@@ -421,10 +453,9 @@ public class Main
         endNodeId = Integer.parseInt(stringValue[1]);
     }
     
-    public static void edgeValueBreakUp(String edgeInformation)
+    public static void edgeValueBreakUp(String [] array)
     {
-        String[] edgeData = edgeInformation.split(" ");
-        assignNeighbors(Integer.parseInt(edgeData[0]), Integer.parseInt(edgeData[1]), Integer.parseInt(edgeData[2]));
+        assignNeighbors(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Integer.parseInt(array[2]));
     }
     
     
@@ -456,63 +487,70 @@ public class Main
     
     public static int dijkstra(Node currentNode)
     {
-        boolean stillNodesToVisit = true;
+        edgesSettled.clear();
+        UnVisited.clear();
         
-        //load up unvisited list
-        for (int i = 1; i < dictionary.size(); i++)
+        for(int i = 0; i < MinHeap.getLength(); i++)
         {
-            UnVisited.clear();
-            UnVisited.add(dictionary.get(i));
+            if (MinHeap.FindNode(i) != null)
+            {
+                UnVisited.add(MinHeap.FindNode(i));
+
+            }
         }
         
-        while (!Visited.contains(endNode) && stillNodesToVisit) // while endNode.visited == false && || invisited distance is infitity
+        
+        while (!Visited.contains(endNode) && edgesSettled.size() != numberOfEdges) // while endNode hasn't been visited or still edges to visit
         {
             ArrayList<Edge> edgeListCopy = currentNode.getNeighbors();
-            
             for (int i = 0; i < edgeListCopy.size(); i++)
             {
+                Edge copyOfEdge = edgeListCopy.get(i);
                 int neighborId = edgeListCopy.get(i).getEndNode();
                 int edgeValue = edgeListCopy.get(i).getLength();
                 Node currentNeighbor = MinHeap.FindNode(neighborId);
-                
                 if (currentNeighbor.getDistance() > (currentNode.getDistance() + edgeValue))
                 {
                     MinHeap.ChangeKey(currentNeighbor, currentNode.getDistance() + edgeValue); //update new priority value if previous is greater
                     currentNeighbor.setPrevNode(currentNode); //set previous node to current node so we know what edge we kept
                 }
+                edgesSettled.add(copyOfEdge);
             }
             Visited.add(currentNode); //stick node we have just visited in a seperate list we will not be coming back to it
-            UnVisited.remove(currentNode); // removing node from unvisited list
-            for(int i = 0; i < UnVisited.size(); i++)
-            {
-                if (UnVisited.get(i).getDistance() != Integer.MAX_VALUE)
-                {
-                    stillNodesToVisit = true; 
-                    break;
-                }
-                else
-                {
-                    stillNodesToVisit = false;
-                }
-            }
+            UnVisited.remove(currentNode);
             MinHeap.initalizeDictionary(dictionary); // keep dictionary up to date
-            if (currentNode != endNode) // sort through list to order neighbors from distance from startNode
+            if (edgeListCopy.size() > 1) // sort through list to order neighbors from distance from startNode
             {
-              currentNode.sortNeighbors(edgeListCopy);
+              UnVisited = currentNode.sortUnVisitedVerticies(UnVisited);
+              int newCurrentNodeId = edgeListCopy.get(0).getEndNode(); //look at unvisited neighbors and go back to step 3
+              currentNode = MinHeap.FindNode(newCurrentNodeId); // extract from dictionary
+
+
+            }
+            else if(edgeListCopy.size() == 1)
+            {
               int newCurrentNodeId = edgeListCopy.get(0).getEndNode(); //look at unvisited neighbors and go back to step 3
               currentNode = MinHeap.FindNode(newCurrentNodeId); // extract from dictionary
             }
+            else
+            {
+                currentNode = UnVisited.get(0);
+            }
         }
 
+        //check if shortest path exisits
         if (!Visited.contains(endNode))
         {
-            return -1;
+            System.out.println("No Shortest Path");
+            int shortestPath = -1;
+            System.out.println(shortestPath);
+            return shortestPath;
         }
         else
         {
-            //System.out.println("Finished Dijkstra! Almost shortest distance found!");
+            System.out.println("Finished Dijkstra! Almost shortest distance found!");
             calculateEdges(endNode);
-            return 0;
+            return endNode.getDistance();
         }
     }
 }
