@@ -1,10 +1,10 @@
 import java.util.*;
-public class PerfectNumber
+class Main
 {
     public static int x = 0;
     public static int result = 0;
 
-    public static void main(String args[]) 
+    public static void main(String[] args)
     { 
        //initalizing variables
        int n = 0;
@@ -24,11 +24,11 @@ public class PerfectNumber
 
            if(result == x)
            {
-               System.out.println(x + " eh perfeito!");
+               System.out.println(x + " eh perfeito");
            }
            else 
            {
-               System.out.println(x + " nao eh perfeito!");
+               System.out.println(x + " nao eh perfeito");
            }
            //reset result value
            result = 0;
