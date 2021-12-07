@@ -1,8 +1,8 @@
 import java.util.*;
 class Main
 {
-    public static int x = 0;
-    public static int result = 0;
+    public static long x = 0;
+    public static long result = 0;
 
     public static void main(String[] args)
     { 
@@ -36,16 +36,15 @@ class Main
 
     }
     
-    public static int isPerfect(int testValue)//function to calculate if a number is perfect
+    public static long isPerfect(long testValue)//function to calculate if a number is perfect
     {  
-        if (testValue != 0)
+        while (testValue != 0)
         {
-            isPerfect(testValue - 1);
             if (x % testValue == 0 && x != testValue) //if a positive divisor add to the result
             {
                result = result + testValue;
             }
-
+            testValue--;
         }
             return result;
     }
